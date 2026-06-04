@@ -1,22 +1,50 @@
 --[[
-USE GUIDE
-Rebirth:fireserver() | idk if i type it right idc
-collect(slot) | example collect("10")
-BuySpeed(Speed) | example BuySpeed(4) | from 1 to 4
-ToggleSpeed:FireServer() | self explain
-upgrade(slot) | example upgrade("9")
+===================================================
+                BRAINROT GAME LIBRARY
+===================================================
+USE GUIDE (после загрузки через loadstring):
+lib.rebirth()        - сделать ребирз
+lib.collect(slot)    - собрать деньги со слота (число или строка)
+lib.buySpeed(speed)  - купить апгрейд скорости (от 1 до 4)
+lib.toggleSpeed()    - переключить настройку скорости
+lib.upgrade(slot)    - апгрейднуть друга в слоте
+===================================================
 ]]
-local CollectEarnEvent = game:GetService("ReplicatedStorage").SharedModules.Network.Remotes["Collect Earnings"] -- 
-local Rebirth = game:GetService("ReplicatedStorage").SharedModules.Network.Remotes.Rebirth 
-local BuySpeedEvent = game:GetService("ReplicatedStorage").SharedModules.Network.Remotes["Buy Speed Upgrade"]
-local ToggleSpeed = game:GetService("ReplicatedStorage").SharedModules.Network.Remotes["Toggle Speed Setting"]
-local UpgradeSlot = game:GetService("ReplicatedStorage").SharedModules.Network.Remotes["Upgrade Friend"]
-local function upgrade(slot)
-    UpgradeSlot:FireServer(slot)
+
+local BrainrotLib = {}
+
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Remotes = ReplicatedStorage:WaitForChild("SharedModules"):WaitForChild("Network"):WaitForChild("Remotes")
+
+local CollectEarnEvent = Remotes:WaitForChild("Collect Earnings")
+local RebirthEvent = Remotes:WaitForChild("Rebirth")
+local BuySpeedEvent = Remotes:WaitForChild("Buy Speed Upgrade")
+local ToggleSpeedEvent = Remotes:WaitForChild("Toggle Speed Setting")
+local UpgradeSlotEvent = Remotes:WaitForChild("Upgrade Friend")
+
+function BrainrotLib.upgrade(slot)
+    UpgradeSlotEvent:FireServer(tostring(slot))
 end
-local function collect(slot)
-    CollectEarnEvent:FireServer(slot)
+
+
+function BrainrotLib.collect(slot)
+    CollectEarnEvent:FireServer(tostring(slot))
 end
-local function BuySpeed(speed)
- BuySpeedEvent:FireServer(4)
+
+
+function BrainrotLib.buySpeed(speed)
+    BuySpeedEvent:FireServer(speed)
 end
+
+
+function BrainrotLib.toggleSpeed()
+    ToggleSpeedEvent:FireServer()
+end
+
+function BrainrotLib.rebirth()
+    RebirthEvent:FireServer()
+end
+
+-- Обязательно возвращаем таблицу, чтобы loadstring()() мог её прочитать!
+return BrainrotLib
